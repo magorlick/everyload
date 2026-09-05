@@ -1048,11 +1048,19 @@ window.addEventListener('keydown', e => {
     sctx.fillRect(0, 0, snap.width, snap.height);
     if (artSource) sctx.drawImage(artSource, 0, 0, snap.width, snap.height);
     snap.toBlob(blob => {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `everyload-${currentName.replace(/ /g, '-')}-${seed}.png`;
-      a.click();
-      URL.revokeObjectURL(a.href);
+      const filename = `everyload-${currentName.replace(/ /g, '-')}-${seed}.png`;
+      // inside the Claude artifact runtime, downloads go through its save API
+      const viaClaude = window.claude && typeof window.claude.use === 'function'
+        ? window.claude.use('downloads')
+        : Promise.resolve(null);
+      viaClaude.then(downloads => {
+        if (downloads) return downloads.save({ filename, data: blob }).catch(() => { });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
     });
   }
 });
