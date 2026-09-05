@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A new piece of generative art on every load.">
+<title>Everyload</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+  canvas { display: block; width: 100vw; height: 100vh; cursor: pointer; }
+  #label {
+    position: fixed; left: 16px; bottom: 14px;
+    font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #fff; mix-blend-mode: difference;
+    opacity: 0; transition: opacity 1.2s ease;
+    pointer-events: none; user-select: none; letter-spacing: 0.02em;
+  }
+  #label.show { opacity: 0.75; transition: opacity 0.3s ease; }
+  #controls { position: fixed; right: 16px; bottom: 14px; display: flex; gap: 10px; }
+  #controls button {
+    width: 46px; height: 46px; border-radius: 50%; padding: 0;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(18,18,24,0.45); backdrop-filter: blur(8px);
+    color: #fff; font-size: 19px; line-height: 1; cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  #controls button:hover { transform: scale(1.12); background: rgba(18,18,24,0.75); }
+  #controls button.pop { animation: pop 0.35s ease; }
+  @keyframes pop { 40% { transform: scale(1.35); } }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="label"></div>
+<div id="controls">
+  <button id="reject" title="Not for me — show me something else (N)">✕</button>
+  <button id="accept" title="More like this (Y)">♥</button>
+</div>
+<script src="app.js?v=5"></script>
+</body>
+</html>
